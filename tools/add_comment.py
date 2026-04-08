@@ -43,8 +43,8 @@ def register(mcp: FastMCP) -> None:
         author = result.get("author", {})
 
         return {
-            "comment_id": author.get("accountId", "unknown"),
-            "issue_key":  author.get("displayName", cleaned_key),
-            "author":     result.get("id", "unknown"),
+            "comment_id": result.get("id", "unknown"),
+            "issue_key":  cleaned_key,
+            "author":     author.get("displayName", "Unknown"),
             "created":    result.get("created", "—"),
         }

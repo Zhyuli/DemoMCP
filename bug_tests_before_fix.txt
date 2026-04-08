@@ -1,0 +1,64 @@
+﻿FFF                                                                      [100%]
+================================== FAILURES ===================================
+________________ test_add_comment_response_fields_are_correct _________________
+
+mcp_with_fake_jira = FastMCP('JiraMCP-Test')
+
+    @pytest.mark.asyncio
+    async def test_add_comment_response_fields_are_correct(mcp_with_fake_jira: FastMCP) -> None:
+        async with Client(mcp_with_fake_jira) as client:
+            added = await client.call_tool_mcp(
+                "add_comment",
+                {"issue_key": "SCRUM-1", "comment": "comment id verification"},
+            )
+            assert added.isError is False
+            added_data = added.structuredContent
+    
+            comments = await client.call_tool_mcp("get_comments", {"issue_key": "SCRUM-1"})
+            assert comments.isError is False
+            last_comment = comments.structuredContent["comments"][-1]
+    
+>       assert added_data["comment_id"] == last_comment["comment_id"]
+E       AssertionError: assert 'acc-123' == '1000'
+E         
+E         - 1000
+E         + acc-123
+
+tests\test_tools_integration.py:211: AssertionError
+______________________ test_get_comments_trailing_space _______________________
+
+mcp_with_fake_jira = FastMCP('JiraMCP-Test')
+
+    @pytest.mark.asyncio
+    async def test_get_comments_trailing_space(mcp_with_fake_jira: FastMCP) -> None:
+        async with Client(mcp_with_fake_jira) as client:
+            result = await client.call_tool_mcp("get_comments", {"issue_key": "SCRUM-1\t"})
+    
+>       assert result.isError is False
+E       assert True is False
+E        +  where True = CallToolResult(meta=None, content=[TextContent(type='text', text="Invalid issue key format: 'DEV-1\t'. Expected format like 'DEV-1'", annotations=None, meta=None)], structuredContent=None, isError=True).isError
+
+tests\test_tools_integration.py:222: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[04/06/26 16:40:09] Error calling tool 'get_comments'                          \n                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 Traceback (most recent call last) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\fastmcp\\server\\serve \u2502\n                    \u2502 r.py:987 in call_tool                                   \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\fastmcp\\tools\\tool.p \u2502\n                    \u2502 y:354 in _run                                           \u2502\n                    \u2502                                                         \u2502\n                    \u2502                 ... 5 frames hidden ...                 \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\pydantic\\type_adapte \u2502\n                    \u2502 r.py:441 in validate_python                             \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\tools\\get_comments.py:29 in get_comments     \u2502\n                    \u2502                                                         \u2502\n                    \u2502   26 \u2502   \u2502                                              \u2502\n                    \u2502   27 \u2502   \u2502   cleaned_key = issue_key.upper()            \u2502\n                    \u2502   28 \u2502   \u2502   if not re.match(r"^[A-Z]+-\\d+$", cleaned_k \u2502\n                    \u2502 > 29 \u2502   \u2502   \u2502   raise ToolError(                       \u2502\n                    \u2502   30 \u2502   \u2502   \u2502   \u2502   f"Invalid issue key format: '{issu \u2502\n                    \u2502   31 \u2502   \u2502   \u2502   )                                      \u2502\n                    \u2502   32                                                    \u2502\n                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                    ToolError: Invalid issue key format: 'DEV-1     '. Expected\n                    format like 'DEV-1'                                        
+_______________________ test_get_comments_leading_space _______________________
+
+mcp_with_fake_jira = FastMCP('JiraMCP-Test')
+
+    @pytest.mark.asyncio
+    async def test_get_comments_leading_space(mcp_with_fake_jira: FastMCP) -> None:
+        async with Client(mcp_with_fake_jira) as client:
+            result = await client.call_tool_mcp("get_comments", {"issue_key": "\tSCRUM-1"})
+    
+>       assert result.isError is False
+E       assert True is False
+E        +  where True = CallToolResult(meta=None, content=[TextContent(type='text', text="Invalid issue key format: '\tSCRUM-1'. Expected format like 'DEV-1'", annotations=None, meta=None)], structuredContent=None, isError=True).isError
+
+tests\test_tools_integration.py:232: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[04/06/26 16:40:10] Error calling tool 'get_comments'                          \n                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 Traceback (most recent call last) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\fastmcp\\server\\serve \u2502\n                    \u2502 r.py:987 in call_tool                                   \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\fastmcp\\tools\\tool.p \u2502\n                    \u2502 y:354 in _run                                           \u2502\n                    \u2502                                                         \u2502\n                    \u2502                 ... 5 frames hidden ...                 \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\.venv\\Lib\\site-packages\\pydantic\\type_adapte \u2502\n                    \u2502 r.py:441 in validate_python                             \u2502\n                    \u2502                                                         \u2502\n                    \u2502 C:\\DemoMcp\\tools\\get_comments.py:29 in get_comments     \u2502\n                    \u2502                                                         \u2502\n                    \u2502   26 \u2502   \u2502                                              \u2502\n                    \u2502   27 \u2502   \u2502   cleaned_key = issue_key.upper()            \u2502\n                    \u2502   28 \u2502   \u2502   if not re.match(r"^[A-Z]+-\\d+$", cleaned_k \u2502\n                    \u2502 > 29 \u2502   \u2502   \u2502   raise ToolError(                       \u2502\n                    \u2502   30 \u2502   \u2502   \u2502   \u2502   f"Invalid issue key format: '{issu \u2502\n                    \u2502   31 \u2502   \u2502   \u2502   )                                      \u2502\n                    \u2502   32                                                    \u2502\n                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                    ToolError: Invalid issue key format: '  DEV-1'. Expected   \n                    format like 'DEV-1'                                        
+=========================== short test summary info ===========================
+FAILED tests/test_tools_integration.py::test_add_comment_response_fields_are_correct
+FAILED tests/test_tools_integration.py::test_get_comments_trailing_space - as...
+FAILED tests/test_tools_integration.py::test_get_comments_leading_space - ass...
+3 failed, 5 deselected in 1.22s

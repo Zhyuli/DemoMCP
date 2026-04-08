@@ -1,7 +1,7 @@
 import pytest
-from schemas import IssueKeySchema, CreateIssueSchema, SearchIssuesSchema
-from fastmcp import FastMCP, Client
-from tools import get_issue, create_issue, update_issue, delete_issue, search_issues
+
+
+pytestmark = pytest.mark.skip(reason="Replaced by test_tools_unit.py and test_tools_integration.py")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

@@ -24,7 +24,7 @@ def register(mcp: FastMCP) -> None:
         if not issue_key:
             raise ToolError("issue_key cannot be empty")
         
-        cleaned_key = issue_key.upper()
+        cleaned_key = issue_key.strip().upper()
         if not re.match(r"^[A-Z]+-\d+$", cleaned_key):
             raise ToolError(
                 f"Invalid issue key format: '{issue_key}'. Expected format like 'DEV-1'"
